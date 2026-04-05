@@ -1,0 +1,40 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// 서버별 설정
+model Guild {
+  id        String   @id
+  name      String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  autoRoles     AutoRole[]
+  reactionRoles ReactionRole[]
+}
+
+// 입장 시 자동 역할 부여
+model AutoRole {
+  id      String @id @default(cuid())
+  guildId String
+  roleId  String
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+}
+
+// 반응 역할
+model ReactionRole {
+  id           String  @id @default(cuid())
+  guildId      String
+  channelId    String
+  messageId    String
+  emoji        String
+  roleId       String
+  removeRoleId String?
+
+  guild Guild @relation(fields: [guildId], references: [id], onDelete: Cascade)
+}
