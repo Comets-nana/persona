@@ -16,6 +16,7 @@ import { commands } from './commands';
 import { onGuildMemberAdd } from './events/guildMemberAdd';
 import { onReactionAdd } from './events/reactionAdd';
 import { onReactionRemove } from './events/reactionRemove';
+import { startApiServer } from './api';
 
 dotenv.config();
 
@@ -33,9 +34,10 @@ const client = new Client({
 });
 
 client.once(Events.ClientReady, async (c) => {
-console.log(`✅ Persona 봇 준비 완료: ${c.user.tag}`);
-const guildCount = await prisma.guild.count();
-console.log(`📦 DB 연결 성공! 등록된 서버 수: ${guildCount}`);
+  console.log(`✅ Persona 봇 준비 완료: ${c.user.tag}`);
+  const guildCount = await prisma.guild.count();
+  console.log(`📦 DB 연결 성공! 등록된 서버 수: ${guildCount}`);
+  startApiServer(c);
 });
 
 client.on(Events.InteractionCreate, async (interaction: Interaction) => {
